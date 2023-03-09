@@ -1,5 +1,3 @@
-# importing the tkinter module and PIL
-# that is pillow module
 import tkinter as tk
 import json
 import os
@@ -7,7 +5,6 @@ import random
 
 def addEnding(text):
   return text + '\n-------ENDING-------'
-
 
 def updateFact():
   global current, current_key, Fact, texts
@@ -49,16 +46,13 @@ def exit():
   with open(out_file, 'w') as fo:
     json.dump(label_file, fo, indent=4)
   root.destroy()
- 
-# Calling the Tk (The initial constructor of tkinter)
+
+# init tkinter 
 root = tk.Tk()
-# We will make the title of our app as Image Viewer
 root.title("Label Text")
-# The geometry of the box which will be displayed
-# on the screen
 root.geometry("700x500")
 
-# cargar el fichero con posibles datos previos ya guardados
+# load data files
 in_file = "./technical_test_data_sample.json"
 out_file = "./technical_test_data_sample_labels.json"
 
@@ -76,8 +70,7 @@ else:
 texts_orig = {k:i for k,i in data['Description'].items()}
 tags = {k:i for k,i in data['tags'].items()}
 
-# apply a filter to label messages from a specific label
-# FILTER_TAG = 'category-1'
+# apply a filter if you want to label messages from a specific label
 FILTER_TAG = None
 texts = {}
 if FILTER_TAG is not None:
@@ -89,6 +82,7 @@ else:
 
 keys = list(texts.keys())
 random.shuffle(keys)
+
 # List of labels already done
 labels = {k:i for k,i in label_file['labels'].items()}
 
@@ -103,6 +97,7 @@ T = tk.Text(root, height = 20, width = 52)
 # current index of the sentence we have not done
 current = 0
 print(current, len(keys), current <= len(keys))
+
 if current > len(keys) - 1:
   print('No labels to do')
   exit()
@@ -117,11 +112,6 @@ else:
   button_unknown = tk.Button(root, text="?", command=unknown)
   button_exit = tk.Button(root, text="Close", command=exit)
 
-  # T.pack()
-  # button_where.pack()
-  # button_other.pack()
-  # button_unknown.pack()
-  # button_exit.pack()
   label = tk.Label(root, text = "Is the customer asking for the status of his order?")
   
   label.grid(row = 0, column = 1, pady = 2, padx = 20)
@@ -130,6 +120,5 @@ else:
   button_other.grid(row = 2, column = 1, pady = 20)
   button_unknown.grid(row = 2, column = 2, pady = 20, padx = 20)
   button_exit.grid(row = 3, column = 1, pady = 20)
-
     
   tk.mainloop()

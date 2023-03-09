@@ -1,0 +1,3 @@
+There is no requirements file as the only script used is the labeler and it only needs to have python3 installed.
+
+For the .ipynb, you upload it into google drive and open it. It has all the imports there and you don't have to install anything. You can run the code, each section is independent, so if you like you can run whichever section you prefer, just run the import cell first.

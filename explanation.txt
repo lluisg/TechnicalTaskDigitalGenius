@@ -255,7 +255,7 @@ he estat mirant visualitzacio del model, pero amb 22 nivells es complicat
 15:58
 selecciono el model de Random Forest sobre NN perque NN dona pitjors resultats amb el cas que tenim. Si etiquetes mes dades i tornes a entrenar potser donaria millors resultats, pero en el cas actual no es.
 
-selecciono el model de SVM sobre RF perque es mes rapid. Si amb 179 casos a pasem de 0.001s a 0.03s en el cas que processem molts mes casos els temps empitjoraran molt mes. I podem eviat problemes si tenim algun outlier.
+selecciono el model de SVM sobre RF perque es mes rapid. Si amb 179 casos a pasem de 0.008s a 0.024s no sembla molt, pero en el cas que processem molts mes casos els temps empitjoraran molt mes. I podem eviat problemes si tenim algun outlier.
 Tot i aixo haurem de estar pendents de si volem escalar el sistema, ja que els svm poden donar mes problemes.
 16:16
 
@@ -263,5 +263,15 @@ Tot i aixo haurem de estar pendents de si volem escalar el sistema, ja que els s
 Comprovo i torno a correr el codi desde 0 comprovant que estigui tot ccorrecte i net
 I copio els fichers al nou github
 Comentar que en aquest cas he anat guardant els nous fichers per poder correr seccions en especific sense dependre de haver corregut les seccions anteriors, pero que de normal descarregaria en nous fichers/ho faria modular
+16:38
+I realize que no he cambiat que els tags menors de 5 a unknown, axi que ho cambio
+16:48
+back again
+done
+16:59
+
+17:33
+writing the document
+19:04
 
 
