@@ -262,5 +262,6 @@ Tot i aixo haurem de estar pendents de si volem escalar el sistema, ja que els s
 16:18
 Comprovo i torno a correr el codi desde 0 comprovant que estigui tot ccorrecte i net
 I copio els fichers al nou github
+Comentar que en aquest cas he anat guardant els nous fichers per poder correr seccions en especific sense dependre de haver corregut les seccions anteriors, pero que de normal descarregaria en nous fichers/ho faria modular
 
 
