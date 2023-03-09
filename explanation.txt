@@ -1,0 +1,266 @@
+28/2
+15:50
+preparar el sistema para que funcione el jupyter notebook y la carpeta sea correctamente, ya que mi ordenador no puede instalarlo i da problems
+16:10
+
+16:10
+cargar fichero json y mirar como son los datos con python
+16:18
+
+16:19
+mirar con los ojos como son los campos y cuales son utiles (extra con python tambien)
+16:51
+
+16:51 (con pausa de 15min)
+preparar graficas para poder evaluar visualmente los valores de 
+17:26
+
+
+17:30
+mi intencion es la de labelear todas las frases, ya que hay 1400, tampoco son tantas, usando una aplicacion de tkinter para simplificar e ir mas rapido
+preparar programa con tkinter para labelear mas rapido
+esta basat en https://www.geeksforgeeks.org/image-viewer-app-in-python-using-tkinter/
+https://www.geeksforgeeks.org/python-tkinter-text-widget/
+18:18
+
+
+3/3
+15:43
+seguir amb el tkinter
+el tkinter basicament agafa el text tel mostra i et deixa seleccionar si vols que sigui where(1), other(0) or unknown(?), aquest ultim es per mirarlo mes endavant
+i el guarda en un fixer amb la resta de dades de data_labeled
+16:20
+
+16:20
+pasarlo a pandas y mirar que dice chatgpt
+mirar los datos y analizar un poco
+pasar la columna de tags, a varias columnas de tags_X, para que sean individuales
+eliminar todas las columnas excepto las utiles
+17:26
+
+17:28
+perdido un tiempo mirando la distribucion de la longitud de los textos
+17:49
+
+18:15
+decido guardar los datos que tenemos ahora y pasar primero a limpiar el texto mejor
+eso en una nueva notebook
+preparo para limpiar
+miro que elementos de los textos no son los basicos [A-Z0-9] y mirar en que casos se usan para ver donde se puede limpiar mejor el codigo (me he quedado a medias)
+18:30
+
+20:07
+seguimos
+con el @ parece que podemos eliminar toda las letras contiguas hasta que aparezca un espacio
+? podria ser 
+al final elimino totes les puntuacions, i els numeros tambe, perque no aporten res
+i preparo per separar totes les frases en paraules
+sembla que la neteja amb regex no acaba de funcionar del tot correctament, ja que no borra tots els simbols
+21:00
+
+21:00
+intento pasar a collab porque queda todo mejor
+21:21
+
+4/3
+16:05
+trying to fix the cleaning text function: it doesnt clean sybols and underscores
+looking for sentences with non standarized text and checking it
+16:20
+
+16:36
+tags to onehot encoding
+we can combine them consutively so we dont loss information about which is first
+to reduce dimensionality of the input when hot encoding, I will reduce all the tags that only appear one time
+18:45
+
+-> aqui me doy cuenta que si los tags son fiables, algunos ya nos dan la respuesta a nuestra pregunta: whereismyorder ya nos dice que lo es
+
+5/3
+16:45
+my first thought is to apply a transformer neural network, but I am not sure as I have too low number of sentences and I have not split them into training and testing still...
+I think about the possibility to use data augmentation.
+I investigate a little.
+Maybe lemmatization could be better than stemming -> I change that.
+I realize that a problem here could be spelling. A wrong spelled word can affect the tokenization and following identification -> I look at it
+Spell checking could make wrong corrections, but still if it checks correctly words
+I will use the jamspell spelling checker library, it seems to be pretty good.
+17:16
+
+17:16
+I see there is a free and pro version but okey.
+I read:
+https://aclanthology.org/2020.lrec-1.228.pdf
+BingSpell is paying
+Google I dont want to be calling api everytime, I would prefer a library
+Seeing a transformer work so well I decided to look for a pretrained version
+http://www.realworldnlpbook.com/blog/unreasonable-effectiveness-of-transformer-spell-checker.html  -  https://github.com/mhagiwara/xfspell -> it is really interesting and seems to be working really well. If we had a server dedicated to it I would be interested in trying it. But for now I want something that I could use, maybe a pretrained. If I had more examples on my case or anything I could try to finetune a model
+Jamspell seemed pretty good, but the concatenation correction is very bad and it would be interesting
+I decided to go for LanguageTools, because it seems to work with both joined words and concatenation errors. 
+-- my idea to apply the spell checker using languagetool library for python is to get the appearences of the words in my database, and on the new sentence check if there is some word that doesnt appear or is a word that has a low appearence rate in my database. If that is the case I want to check that word with the spelling corrector jointly with all the sentence, and if it detects it as an error, change it for the replacement given.--
+18:00
+
+18:05
+posar al principi de tot que separo el conjunt en training i test, faig tota la preparacio anaisis etc en el conjunt de training i despres ho aplico al de test (pero realment ho faig ara), el de validacio el preparo quan sigui necesari
+vaig per una distribucio de 80% train, 20% test (1146-287 frases) amb shuffle, perque nose si hi ha cap possible distribucio dins de les propies dades que no me adonat i aixi la evito. Tambe se que hi ha poques dades de test pero esque hi ha poques dades en general.
+he limpiado un poco y cambiado los dfs, y estava hablando con maria
+18:50
+
+6/3
+10:10
+I change to not remove the stop words and not remove the words with less than X letters, as they could have some information
+10:12
+analyze the sentences length to normalize the length
+maximum of 368 tokens -> normalize to 370 adding Nans values
+10:46
+
+
+next: prepare the text as numbers, taking into account the tags
+	get the words and frequency and remove the ones that appear less than X times in all the dataset and assign the numbers as that, having the 0 as None appearing and the 1 as unknown
+	comment that you are thinking of using a pretrained model, or something that is already iplemented to reduce the time you take in this, but in a professional setting I could check for more options adn try to implement more complex options
+	trying a transformer as I am used to them and usually work well with the text tasks, if not we could try a random forest
+
+15:15
+readapptar el labeler i labelear una mica
+ma contestat i ma dit que deixen que validi jo si els tags son acceptables, segons el seu nom -> labeleo fichers i comprovo si els tags que considero que son utils donen el resultat esperat o no
+15:36
+labeleo i apunto les coses interesants que es poden fer per netejar el text:
+	a partir de ------- ja res
+	si hi ha un parell de \n seguits (nomes el primer parragraf)
+	hi ha > que indiquen els missatges anteriors de la cadena -> On 01/03/11 7:07 PM, Russell Brown wrote: > ...
+15:50
+sembla que hi ha un monton que no estan relacionades amb where is my order, aixi que ficare labels mirant segons els tags
+si els tags tenen molts casos, agafare una mostra significativa
+could it be that we could classify with only the tags?
+poso a tocar el section de tags del notebook
+chatgpt li dona per anar mooolt lent
+17:03
+
+18:58
+acabar de arreglar labeler
+para hacerlo mas rapido pongo un filtro para empezar labeleando solo los que contengan un tags especifico
+19:12
+clasificar where-is-my-order
+19:30
+
+7/3
+16:15
+agafar la mitat de dades per sampling random a que es la millor opcio
+16:17
+clasificar where-is-my-order
+16:28
+printejo quins mes tags hi ha
+16:28
+clasificar:
+language
+how-to-return
+arrived-damaged - 0 casos
+change-delivery-address
+shipping-price
+adverse-effect -> only 1
+promocode-not-working
+16:53 pausa 16:57
+faulty-product
+discounts-questions
+price-adjustment
+change-delivery-date
+cancel-subscription
+cancel-order
+donation-requests
+update-account-information
+missing-items
+warranty-claim-status
+warranty-policy-information
+not-a-request
+exchange
+add-item
+wrong-item-delivered
+other
+change-items
+return-label
+?
+17:40
+20:39
+remove-item
+lost-package
+order-confirmation-not-received
+--- considero que si preguntan por el codigo de validacion preguntan si su orden se ha validado, pero en el caso de devolucion no porque es una devolucion no una order ---
+order-confirmation-not-received,-return-questions- - 0 casos
+open-ticket - 0 casos
+field-1456 - 0 casos
+ticket - 0 casos
+category-1 - 0 casos
+21:00
+
+21:10
+preparando con los sampled i labels
+replace todos los casos que solo aparecen una vez omo unknown
+21:50
+onehot encoding, we will combine them as the information of order we dont really care
+22:36
+arreglando cositas
+22:43
+
+8/3
+15:05
+separar entre training and eval
+15:12
+mirar que puedo usar para clasificacion, asi de primera se me ocurre:
+neural networks -> the problem can be not enough data to train
+svms
+random forest
+in this situation, intuitively I think that the best option would be SVM, perque no necesita tanta data normalment i les lases sembla ques estan prou ben delimitades
+15:20
+preparar svm
+mirar la possibilitat de usar kfold, a que no tinc molta data
+entrenat svm
+16:15
+entrenar random forest i investigar exactament que es
+mirar si un kmeans seria util
+16:26 -- pause -- 16:44
+penso que sa de tenir en compte la situacio: la situacio que jo tinc al cap es que hi ha el classificador que classifica si es o no, i que en el cas que no ho sigui s'enviara a un altre classificador (huma o no) que  dira a on ha danar aquest missatge. Amb aixo tenim clar que la intencio es tenir el mmaxim de correctes en 1 pero sempre evitant que hi hagi errors de 0 enviats a 1. En el cas de 1s enviats a 0, no es critic, ja que despres el huma podra reenviarlos.
+16:48
+afegeixo un treshold de confiança al svm
+17:24
+miro precision recall -> realmente me interesa la precision, ja que valora el numero de correctes entre els que ha donat com a correctes
+amb svm el problema es que cuan clasifica a 0 ho clasifica amb mes confiança  que quan fa el 1, aixi que hi ha mes facilitat que tot vagi al 0
+17:54
+preparo i entenc random forest
+18:15
+random forest diu que puja accuracy quan baixa threshold, pero precision no afecta -> no acabo de entendre -> perque al baixar el threshold algun dels que clasificaven 0 pasen a 1 perque no tenien massa confiança i aixo fa pujar la acc
+18:35
+buscar info i preparar nn
+basantme en -> https://machinelearningmastery.com/building-a-binary-classification-model-in-pytorch/
+la NN retorna un valor entre 0 i 1 segons lu cconfident que sigui, aixi que toca considerar el threshold que acceptem
+19:10
+intentar carregar els models guardats
+tambe he afegit de guardar el label binarizer i preparar les dades de test
+20:12
+20:50
+again
+netejar dades de test i loading models
+21:05
+trobo que les dades de test no estan amb els labels? -> arreglao
+afegir el seed a lentrenament de la NN per mantenir sempre mateix resultat
+21:20
+resultats otinguts 21:28
+
+9/3
+15:15
+analitzar els 2 casos que dona error en evaluacio, perque tots dona igual
+he visto los casos i no son casos criticos, i un poco dudosos, pero buenu que estan mal i ja esta
+mirare els casos erronis de test pero tampoc podre fer res
+en el cas erroni de test esta clar que el problema es que hi ha un tag the where-is-my-order, cosa que confon al model
+he estat mirant visualitzacio del model, pero amb 22 nivells es complicat
+15:58
+selecciono el model de Random Forest sobre NN perque NN dona pitjors resultats amb el cas que tenim. Si etiquetes mes dades i tornes a entrenar potser donaria millors resultats, pero en el cas actual no es.
+
+selecciono el model de SVM sobre RF perque es mes rapid. Si amb 179 casos a pasem de 0.001s a 0.03s en el cas que processem molts mes casos els temps empitjoraran molt mes. I podem eviat problemes si tenim algun outlier.
+Tot i aixo haurem de estar pendents de si volem escalar el sistema, ja que els svm poden donar mes problemes.
+16:16
+
+16:18
+Comprovo i torno a correr el codi desde 0 comprovant que estigui tot ccorrecte i net
+I copio els fichers al nou github
+
+
